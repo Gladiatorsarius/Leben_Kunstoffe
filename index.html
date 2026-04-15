@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quick World Map</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        :root {
+            --primary-bg: #f4f4f4;
+            --card-bg: #ffffff;
+            --text: #333333;
+        }
+
+        /* Use height: 100% to ensure the map fills the mobile screen */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text);
+            overflow: hidden; /* Prevent double scrollbars on mobile */
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        header {
+            padding: 10px 20px;
+            background: var(--card-bg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 1001;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        #map {
+            flex-grow: 1;
+            width: 100%;
+            background: #aad3df;
+        }
+
+        /* Touch-friendly zoom controls for mobile */
+        .leaflet-bar a {
+            width: 44px !important;
+            height: 44px !important;
+            line-height: 44px !important;
+        }
+
+        /* Desktop specific tweaks */
+        @media (min-width: 768px) {
+            header {
+                padding: 15px 30px;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h2>Interactive World Map</h2>
+        </header>
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Initialize the map
+        // Added tap: true for better mobile interaction
+        const map = L.map('map', {
+            minZoom: 1,
+            maxZoom: 18,
+            worldCopyJump: true,
+            tap: true, 
+            zoomControl: true
+        }).setView([20, 0], 2);
+
+        // Add the OpenStreetMap Tile Layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap'
+        }).addTo(map);
+
+        // Handle window resizing to keep the map centered and prevent layout shifts
+        window.addEventListener('resize', function() {
+            map.invalidateSize();
+        });
+
+        // Small delay to ensure container is ready for mobile rendering
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 100);
+    </script>
+
+</body>
+</html>
